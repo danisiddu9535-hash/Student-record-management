@@ -507,3 +507,56 @@ class _AddStudentScreenState extends State<AddStudentScreen> {
     );
   }
 }
+//=========Search student========
+class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  String query = "";
+
+  @override
+  Widget build(BuildContext context) {
+    final results = context.watch<StudentData>().search(query);
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Search Student")),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
+              decoration: const InputDecoration(labelText: "Search by Name or Reg No"),
+              onChanged: (val) => setState(() => query = val),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              children: results
+                  .map((s) => ListTile(
+                title: Text("${s.name} (${s.registerNumber})"),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Course: ${s.course}"),
+                    Text("DOB: ${s.dob.day}-${s.dob.month}-${s.dob.year}"),
+                    Text("Address: ${s.address}"),
+                    Text("Student Mobile: ${s.studentMobile}"),
+                    Text("Father: ${s.fatherName} (${s.fatherMobile})"),
+                    Text("Mother: ${s.motherName} (${s.motherMobile})"),
+                    if (s.guardianName != null)
+                      Text("Guardian: ${s.guardianName} (${s.guardianMobile})"),
+                  ],
+                ),
+              ))
+                  .toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
