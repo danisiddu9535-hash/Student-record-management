@@ -560,3 +560,43 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 }
+//========student list========
+class StudentListScreen extends StatelessWidget {
+  const StudentListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final students = context.watch<StudentData>().students;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text("Student List")),
+      body: ListView(
+        children: students
+            .map((s) => Card(
+          margin: const EdgeInsets.all(8),
+          child: ListTile(
+            title: Text("${s.name} (${s.registerNumber})"),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Course: ${s.course}"),
+                Text("DOB: ${s.dob.day}-${s.dob.month}-${s.dob.year}"),
+                Text("Address: ${s.address}"),
+                Text("Student Mobile: ${s.studentMobile}"),
+                Text("Father: ${s.fatherName} (${s.fatherMobile})"),
+                Text("Mother: ${s.motherName} (${s.motherMobile})"),
+                if (s.guardianName != null)
+                  Text("Guardian: ${s.guardianName} (${s.guardianMobile})"),
+              ],
+            ),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => context.read<StudentData>().deleteStudent(s.id),
+            ),
+          ),
+        ))
+            .toList(),
+      ),
+    );
+  }
+}
